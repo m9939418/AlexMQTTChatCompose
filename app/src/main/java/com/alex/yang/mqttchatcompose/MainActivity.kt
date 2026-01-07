@@ -4,13 +4,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.runtime.getValue
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alex.yang.mqttchatcompose.presentation.ChatScreen
+import com.alex.yang.mqttchatcompose.presentation.ChatViewModel
 import com.alex.yang.mqttchatcompose.ui.theme.AlexMQTTChatComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,7 +19,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             AlexMQTTChatComposeTheme {
+                val viewModel = hiltViewModel<ChatViewModel>()
+                val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+                ChatScreen(
+                    state = state,
+                    onSendClick = viewModel::sendMessage
+                )
             }
         }
     }
